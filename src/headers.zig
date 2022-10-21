@@ -285,23 +285,3 @@ test "headers-pop" {
     try testing.expect(!headers.contains("Cookie"));
     try testing.expect(mem.eql(u8, headers.popDefault("Cookie", "Hello"), "Hello"));
 }
-
-test "headers-parse" {
-    const HEADERS ="Host: bs.serving-sys.com
-    \nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1
-    \nAccept: image/png,image/*;q=0.8,*/*;q=0.5
-    \nAccept-Language: en-us,en;q=0.5
-    \nAccept-Encoding: gzip, deflate
-    \nConnection: keep-alive
-    \nReferer: http://static.adzerk.net/reddit/ads.html?sr=-reddit.com&bust2
-    \n
-    \n";
-
-    const allocator = std.testing.allocator;
-    var headers = try Headers.initCapacity(allocator, 64);
-    defer headers.deinit();
-    try headers.parseBuffer(HEADERS[0..], 1024);
-
-    try testing.expect(mem.eql(u8, try headers.get("Host"), "bs.serving-sys.com"));
-    try testing.expect(mem.eql(u8, try headers.get("Connection"), "keep-alive"));
-}
