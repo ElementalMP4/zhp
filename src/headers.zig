@@ -287,7 +287,7 @@ test "headers-pop" {
 }
 
 test "headers-parse" {
-    const HEADERS ="Host: bs.serving-sys.com
+    const HEADERS = "Host: bs.serving-sys.com
     \nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1
     \nAccept: image/png,image/*;q=0.8,*/*;q=0.5
     \nAccept-Language: en-us,en;q=0.5
