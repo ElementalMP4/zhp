@@ -18,8 +18,10 @@ pub const IndexHandler = struct {
     pub fn get(self: *IndexHandler, request: *web.Request, response: *web.Response) !void {
         _ = self;
         _ = request;
-        try response.stream.writeAll("\\No routes are defined
-            \\Please add a list of routes in your main zig file.");
+        try response.stream.writeAll(
+            \\No routes are defined
+            \\Please add a list of routes in your main zig file.
+        );
     }
 };
 

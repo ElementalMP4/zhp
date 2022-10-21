@@ -202,12 +202,12 @@ pub const Request = struct {
         var start = stream.readCount();
 
         if (options.dump_buffer) {
-            std.log.debug("
+            std.log.debug(
             \\
             \\========== Buffer at {} ==========
             \\{s}
             \\==============================
-            ", .{start, stream.readBuffered()});
+            , .{start, stream.readBuffered()});
         }
 
         while (true) {
@@ -628,7 +628,7 @@ const TEST_GET_1 =
     "\r\n";
 
 
-const TEST_GET_2 ="
+const TEST_GET_2 =
     \\GET /pixel/of_doom.png?id=t3_25jzeq-t8_k2ii&hash=da31d967485cdbd459ce1e9a5dde279fef7fc381&r=1738649500 HTTP/1.1
     \\Host: pixel.redditmedia.com
     \\User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1
@@ -639,10 +639,9 @@ const TEST_GET_2 ="
     \\Referer: http://www.reddit.com/
     \\
     \\
-    "
 ;
 
-const TEST_POST_1 ="
+const TEST_POST_1 =
     \\POST https://bs.serving-sys.com/BurstingPipe/adServer.bs?cn=tf&c=19&mc=imp&pli=9994987&PluID=0&ord=1400862593644&rtu=-1 HTTP/1.1
     \\Host: bs.serving-sys.com
     \\User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1
@@ -653,7 +652,6 @@ const TEST_POST_1 ="
     \\Referer: http://static.adzerk.net/reddit/ads.html?sr=-reddit.com&bust2
     \\
     \\
-    "
 ;
 
 
@@ -685,12 +683,11 @@ fn expectParseError(err: anyerror, buf: []const u8) !void {
 }
 
 test "01-parse-request-get" {
-    try expectParseResult("
+    try expectParseResult(
         \\GET / HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     , .{
         .headers = undefined, // Dont care
         .buffer = undefined, // Dont care
@@ -747,13 +744,12 @@ test "01-parse-request-post-proxy" {
 }
 
 test "01-parse-request-delete" {
-    try expectParseResult("
+    try expectParseResult(
         \\DELETE /api/users/12/ HTTP/1.0
         \\Host: bs.serving-sys.com
         \\Connection: keep-alive
         \\
         \\
-        "
     , .{
         .headers = undefined, // Dont care
         .buffer = undefined, // Dont care
@@ -767,12 +763,11 @@ test "01-parse-request-delete" {
 }
 
 test "01-parse-request-proxy" {
-    try expectParseResult("
+    try expectParseResult(
         \\PUT https://127.0.0.1/upload/ HTTP/1.1
         \\Connection: keep-alive
         \\
         \\
-        "
     , .{
         .headers = undefined, // Dont care
         .buffer = undefined, // Dont care
@@ -789,12 +784,11 @@ test "01-parse-request-proxy" {
 
 
 test "01-parse-request-port" {
-    try expectParseResult("
+    try expectParseResult(
         \\PATCH https://127.0.0.1:8080/upload/ HTTP/1.1
         \\Connection: keep-alive
         \\
         \\
-        "
     , .{
         .headers = undefined, // Dont care
         .buffer = undefined, // Dont care
@@ -810,82 +804,74 @@ test "01-parse-request-port" {
 }
 
 test "01-invalid-method" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GOT /this/path/is/nonsense HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-invalid-host-char" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET http://not;valid/ HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-invalid-host-scheme" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET htx://192.168.0.0/ HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-invalid-host-scheme-1" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET HTTP:/localhost/ HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-invalid-host-port" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET HTTP://localhost:aef/ HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-invalid-method-2" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\DEL TE /api/users/12/ HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-no-space" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET/this/path/is/nonsense HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-bad-url" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET 0000000000000000000000000 HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
@@ -906,73 +892,66 @@ test "01-bad-url-character-2" {
 }
 
 test "01-bad-query" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET /this/is?query1?query2 HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 
 test "01-empty-request-line" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-unsupported-version" {
-    try expectParseError(error.UnsupportedHttpVersion,"
+    try expectParseError(error.UnsupportedHttpVersion,
         \\GET / HTTP/7.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-version-malformed" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET / HXX/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-url-malformed" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET /what?are? HTTP/1.1
         \\Host: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-empty-header" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET /api/something/ HTTP/1.0
         \\: localhost:8000
         \\
         \\
-        "
     );
 }
 
 test "01-invalid-header-name" {
-    try expectParseError(error.BadRequest,"
+    try expectParseError(error.BadRequest,
         \\GET /api/something/ HTTP/1.0
         \\Host?: localhost:8000
         \\
         \\
-        "
     );
 }
 
@@ -1073,7 +1052,7 @@ test "04-parse-request-headers" {
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
     const allocator = fba.allocator();
 
-    var stream = try IOStream.initTest(allocator,"
+    var stream = try IOStream.initTest(allocator,
         \\GET / HTTP/1.1
         \\Host: server
         \\User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00
@@ -1083,7 +1062,6 @@ test "04-parse-request-headers" {
         \\Connection: keep-alive
         \\
         \\
-        "
     );
     var request = try Request.initTest(allocator, &stream);
     try request.parseTest(&stream);

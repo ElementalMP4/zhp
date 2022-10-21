@@ -287,15 +287,17 @@ test "headers-pop" {
 }
 
 test "headers-parse" {
-    const HEADERS = "Host: bs.serving-sys.com
-    \nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1
-    \nAccept: image/png,image/*;q=0.8,*/*;q=0.5
-    \nAccept-Language: en-us,en;q=0.5
-    \nAccept-Encoding: gzip, deflate
-    \nConnection: keep-alive
-    \nReferer: http://static.adzerk.net/reddit/ads.html?sr=-reddit.com&bust2
-    \n
-    \n";
+    const HEADERS =
+        \\Host: bs.serving-sys.com
+        \\User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1
+        \\Accept: image/png,image/*;q=0.8,*/*;q=0.5
+        \\Accept-Language: en-us,en;q=0.5
+        \\Accept-Encoding: gzip, deflate
+        \\Connection: keep-alive
+        \\Referer: http://static.adzerk.net/reddit/ads.html?sr=-reddit.com&bust2
+        \\
+        \\
+    ;
 
     const allocator = std.testing.allocator;
     var headers = try Headers.initCapacity(allocator, 64);
